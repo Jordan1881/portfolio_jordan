@@ -1,7 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
-import { projects } from "@/data/content";
+import { projects, ProjectStatus } from "@/data/content";
 
 const thumbnailStyles: Record<string, string> = {
   Questly: "linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f64f59 100%)",
@@ -15,6 +16,12 @@ const thumbnailLabels: Record<string, string> = {
   "Finance AI Agent": "FINANCE AI",
   "Notesmith AI": "NOTESMITH",
   ArtAffinity: "ARTAFFINITY",
+};
+
+const statusStyles: Record<ProjectStatus, string> = {
+  Live: "bg-[#dcfce7] text-[#166534]",
+  "In Development": "bg-[#fef9c3] text-[#854d0e]",
+  Prototype: "bg-[#f3f4f6] text-[#374151]",
 };
 
 export default function Projects() {
@@ -48,7 +55,7 @@ export default function Projects() {
             >
               {/* Thumbnail */}
               <a
-                href={project.github}
+                href={project.live ?? project.github}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block relative overflow-hidden rounded-2xl mb-3"
@@ -85,18 +92,46 @@ export default function Projects() {
                 <div className="w-6 h-6 rounded-full border border-[#ccc] flex items-center justify-center text-[#666] text-xs flex-shrink-0 mt-0.5">
                   →
                 </div>
-                <div>
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[#111] font-semibold hover:text-[#5855d4] transition-colors duration-200"
-                  >
-                    {project.name}
-                  </a>
-                  <p className="text-[#999] text-xs mt-0.5 leading-relaxed">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                    <a
+                      href={project.live ?? project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[#111] font-semibold hover:text-[#5855d4] transition-colors duration-200"
+                    >
+                      {project.name}
+                    </a>
+                    <span
+                      className={`text-[10px] px-2 py-0.5 rounded-full font-mono ${statusStyles[project.status]}`}
+                    >
+                      {project.status}
+                    </span>
+                  </div>
+
+                  <p className="text-[#999] text-xs leading-relaxed mb-2">
                     {project.description}
                   </p>
+
+                  {/* Highlights */}
+                  <ul className="space-y-1 mb-3">
+                    {project.highlights.map((h, idx) => (
+                      <li
+                        key={idx}
+                        className="text-[#777] text-xs leading-relaxed flex items-start gap-1.5"
+                      >
+                        <span className="text-[#5855d4] flex-shrink-0 mt-px">·</span>
+                        {h}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <Link
+                    href={`/projects/${project.slug}`}
+                    className="text-[#5855d4] text-xs font-medium hover:underline underline-offset-2"
+                  >
+                    Case Study →
+                  </Link>
                 </div>
               </div>
             </motion.div>

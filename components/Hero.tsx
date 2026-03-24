@@ -51,13 +51,51 @@ export default function Hero() {
               Third-year Information Systems student at Yezreel Valley College.
               Specializing in AI agent architectures and full-stack development.
             </p>
-            <a
-              href="#projects"
-              className="self-start inline-flex items-center gap-2 bg-[#111] text-white text-sm font-medium px-5 py-3 rounded-full hover:bg-[#5855d4] transition-colors duration-300 whitespace-nowrap"
-            >
-              See my work ↓
-            </a>
+            <div className="flex flex-wrap items-center gap-3">
+              <a
+                href="#projects"
+                className="inline-flex items-center gap-2 bg-[#111] text-white text-sm font-medium px-5 py-3 rounded-full hover:bg-[#5855d4] transition-colors duration-300 whitespace-nowrap"
+              >
+                See my work ↓
+              </a>
+              <a
+                href="/cv/yarden-biton-cv.pdf"
+                download
+                className="inline-flex items-center gap-2 border border-[#ccc] text-[#111] text-sm font-medium px-5 py-3 rounded-full hover:border-[#5855d4] hover:text-[#5855d4] transition-colors duration-300 whitespace-nowrap"
+              >
+                Resume ↓
+              </a>
+            </div>
           </div>
+
+          {/* Currently Building */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="mt-6 flex items-center gap-3 flex-wrap"
+          >
+            <span className="text-[#bbb] text-xs font-mono tracking-wide">
+              currently building →
+            </span>
+            <span className="flex items-center gap-1.5 text-xs text-[#666]">
+              <span
+                className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                style={{ backgroundColor: "#5855d4" }}
+              />
+              Questly
+              <span className="text-[#bbb] font-mono ml-0.5">React/TS</span>
+            </span>
+            <span className="text-[#ddd] text-xs">·</span>
+            <span className="flex items-center gap-1.5 text-xs text-[#666]">
+              <span
+                className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                style={{ backgroundColor: "#22c55e" }}
+              />
+              Finance AI Agent
+              <span className="text-[#bbb] font-mono ml-0.5">Python/MCP</span>
+            </span>
+          </motion.div>
         </motion.div>
       </div>
     </section>
