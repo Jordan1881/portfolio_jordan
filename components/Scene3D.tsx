@@ -2,9 +2,26 @@
 
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { isWebGLAvailable } from "@/lib/webgl";
 import { getSceneConfig } from "@/lib/scene-config";
 import { prefersReducedMotion } from "@/lib/motion";
+
+gsap.registerPlugin(ScrollTrigger);
+
+/**
+ * Per-section target states for the scroll choreography. Each section eases
+ * the scene's params toward these values as it scrolls into view.
+ */
+const SECTION_STATES: Record<string, Partial<SceneParams>> = {
+  home: { particleSpeed: 1, accentIntensity: 0.2, cameraZ: 12, particleSpread: 1, clusterX: 0, geometryDriftX: 0 },
+  about: { clusterX: 2.5, geometryDriftX: -2.5 },
+  projects: { cameraZ: 9, particleSpeed: 1.4 },
+  skills: { geometrySpeed: 2, particleSpread: 1.35 },
+  "claude-skills": { accentIntensity: 0.4 },
+  contact: { particleSpeed: 0.4, geometrySpeed: 0.3, cameraZ: 12, particleSpread: 1 },
+};
 
 /**
  * Scene3D — a single persistent Three.js canvas fixed behind all content.
@@ -292,14 +309,42 @@ export default function Scene3D() {
     };
     window.addEventListener("resize", onResize);
 
-    // Expose params for sibling choreography (set by a later slice).
     sceneParamsRef.current = params;
+
+    // ---- Scroll choreography ---------------------------------------------
+    // Each section eases the scene toward its target state on scroll. Skipped
+    // entirely under reduced motion (scene stays static).
+    const scrollTriggers: ScrollTrigger[] = [];
+    if (!reduce) {
+      for (const [id, target] of Object.entries(SECTION_STATES)) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const applyState = () =>
+          gsap.to(params, {
+            ...target,
+            duration: 1.2,
+            ease: "power2.out",
+            overwrite: "auto",
+          });
+        scrollTriggers.push(
+          ScrollTrigger.create({
+            trigger: el,
+            start: "top center",
+            end: "bottom center",
+            onEnter: applyState,
+            onEnterBack: applyState,
+          })
+        );
+      }
+    }
 
     // ---- Cleanup ----------------------------------------------------------
     return () => {
       cancelAnimationFrame(frameId);
       window.removeEventListener("resize", onResize);
       window.removeEventListener("pointermove", onPointerMove);
+      scrollTriggers.forEach((t) => t.kill());
+      gsap.killTweensOf(params);
       sceneParamsRef.current = null;
 
       particleGeometry.dispose();
