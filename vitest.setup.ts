@@ -29,15 +29,19 @@ global.ResizeObserver = vi.fn().mockImplementation(() => ({
   disconnect: vi.fn(),
 }));
 
-global.IntersectionObserver = vi.fn().mockImplementation(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-  takeRecords: vi.fn(() => []),
-  root: null,
-  rootMargin: "",
-  thresholds: [],
-})) as unknown as typeof IntersectionObserver;
+class MockIntersectionObserver implements IntersectionObserver {
+  readonly root = null;
+  readonly rootMargin = "";
+  readonly thresholds = [];
+  observe = vi.fn();
+  unobserve = vi.fn();
+  disconnect = vi.fn();
+  takeRecords = vi.fn(() => []);
+}
+global.IntersectionObserver =
+  MockIntersectionObserver as unknown as typeof IntersectionObserver;
+window.IntersectionObserver =
+  MockIntersectionObserver as unknown as typeof IntersectionObserver;
 
 // GSAP touches layout/scroll APIs jsdom doesn't implement. Component tests
 // verify rendered content and structure, not animation, so stub the animation
@@ -64,7 +68,14 @@ vi.mock("gsap", () => {
       return { revert: vi.fn(), kill: vi.fn() };
     }),
     killTweensOf: vi.fn(),
-    utils: { toArray: vi.fn((x: unknown) => (Array.isArray(x) ? x : [x])) },
+    utils: {
+      toArray: vi.fn((x: unknown) => {
+        if (typeof x === "string") {
+          return Array.from(document.querySelectorAll(x));
+        }
+        return Array.isArray(x) ? x : [x];
+      }),
+    },
   };
   return { gsap, default: gsap };
 });
