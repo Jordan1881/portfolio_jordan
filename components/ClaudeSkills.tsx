@@ -1,127 +1,153 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { prefersReducedMotion } from "@/lib/motion";
 
-const skills = [
+gsap.registerPlugin(ScrollTrigger);
+
+export interface ClaudeSkill {
+  name: string;
+  type: string;
+  description: string;
+  tags: string[];
+}
+
+export const claudeSkills: ClaudeSkill[] = [
   {
     name: "agent-planner",
-    version: "v1.1.0",
-    domain: "AI Engineering",
+    type: "architecture",
     description:
-      "Designs agents and multi-agent systems. A 5-phase workflow problem framing, tool design, orchestration pattern, failure handling, output artifact that guides from a vague idea to a concrete architecture. Distinguishes when to use an agent vs. a simpler prompt chain, and surfaces latency/cost tradeoffs at every step.",
+      "Designs agents and multi-agent systems. A 5-phase workflow — problem framing, tool design, orchestration pattern, failure handling, output artifact — that guides from a vague idea to a concrete architecture.",
     tags: ["Architecture", "Tool Use", "Orchestration"],
   },
   {
     name: "ai-cost-optimizer",
-    version: "v1.0.0",
-    domain: "AI Engineering",
+    type: "cost",
     description:
-      "Audits LLM spending and reduces API costs with real dollar numbers. Covers model right-sizing, prompt caching, Batch API, output length control, and semantic caching. Works from a baseline cost calculation and ranks optimizations by ROI never gives a recommendation without attaching a number.",
+      "Audits LLM spending and reduces API costs with real dollar numbers. Covers model right-sizing, prompt caching, Batch API, output length control, and semantic caching — ranked by ROI.",
     tags: ["Cost", "Token Optimization", "Model Routing"],
   },
   {
     name: "skill-forge",
-    version: "v1.0.0",
-    domain: "AI Engineering",
+    type: "automation",
     description:
-      "Builds or audits Claude Code skills. Two modes: BUILD (new skill from scratch with qualification gates, interview, design proposal, and CLAUDE.md integration) and AUDIT (scores an existing skill across 9 dimensions against a quality rubric, then shows before/after diffs for every gap).",
+      "Builds or audits Claude Code skills. BUILD mode creates a skill from scratch; AUDIT mode scores an existing skill across 9 dimensions against a quality rubric with before/after diffs.",
     tags: ["Skill Building", "Audit", "Claude Code"],
   },
   {
     name: "explain-code",
-    version: "v1.0.0",
-    domain: "Developer Experience",
+    type: "developer experience",
     description:
-      "Explains any codebase using analogies, ASCII flow diagrams, step-by-step walkthroughs, and a common gotcha. Makes complex code understandable at the right level not just what the code does, but why it's built that way.",
+      "Explains any codebase using analogies, ASCII flow diagrams, and step-by-step walkthroughs — not just what the code does, but why it's built that way.",
     tags: ["Diagrams", "Analogies", "Teaching"],
   },
 ];
 
 export default function ClaudeSkills() {
-  return (
-    <section className="py-24 bg-[#111] text-white">
-      <div className="max-w-5xl mx-auto px-6 sm:px-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-12"
-        >
-          <p className="text-[#444] text-xs font-mono uppercase tracking-widest mb-4">
-            AI Tooling
-          </p>
-          <h2 className="text-4xl sm:text-5xl font-black tracking-tighter leading-none mb-4">
-            Beyond using AI 
-            <br />
-            <span className="text-[#5855d4]">building the tools</span>
-            <br />
-            that make AI more capable.
-          </h2>
-          <p className="text-[#555] text-sm max-w-lg leading-relaxed">
-            I design and build{" "}
-            <span className="text-[#888] font-mono bg-[#1a1a1a] px-1.5 py-0.5 rounded text-xs">
-              SKILL.md
-            </span>{" "}
-            files structured instruction sets that give Claude Code a specialized mode for a
-            given domain. Each skill encodes a workflow, quality bar, and output standard.
-          </p>
-        </motion.div>
+  const rootRef = useRef<HTMLElement>(null);
 
-        <div className="grid sm:grid-cols-2 gap-4">
-          {skills.map((skill, i) => (
-            <motion.div
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const cards = gsap.utils.toArray<HTMLElement>("[data-claude-skill]");
+
+    if (prefersReducedMotion()) {
+      gsap.set(cards, { opacity: 1, y: 0 });
+      return;
+    }
+
+    const ctx = gsap.context(() => {
+      gsap.from(cards, {
+        opacity: 0,
+        y: 40,
+        duration: 0.5,
+        stagger: 0.1,
+        ease: "power2.out",
+        scrollTrigger: { trigger: root, start: "top 75%" },
+      });
+    }, root);
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section
+      ref={rootRef}
+      id="claude-skills"
+      className="relative z-10 px-6 sm:px-10 py-24"
+    >
+      <div className="max-w-6xl mx-auto">
+        <p className="eyebrow mb-4" style={{ color: "var(--accent)" }}>
+          CLAUDE SKILLS
+        </p>
+        <h2
+          className="mb-3"
+          style={{ color: "var(--text-primary)", fontSize: "clamp(2rem, 4vw, 3rem)" }}
+        >
+          Tooling I built for Claude
+        </h2>
+        <p
+          className="mb-12 max-w-xl"
+          style={{ color: "var(--text-muted)", fontSize: "1rem", lineHeight: 1.6 }}
+        >
+          Custom skill modules I built to extend Claude&apos;s capabilities for
+          engineering workflows.
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          {claudeSkills.map((skill) => (
+            <div
               key={skill.name}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.07 }}
-              className="rounded-2xl border border-[#1e1e1e] bg-[#161616] p-6 hover:border-[#5855d4]/30 transition-colors duration-300 group"
+              data-claude-skill
+              className="rounded-2xl p-6"
+              style={{
+                backgroundColor: "var(--bg-secondary)",
+                border: "1px solid var(--accent)",
+                boxShadow: "0 0 40px var(--accent-glow)",
+              }}
             >
-              {/* Header */}
-              <div className="flex items-start justify-between gap-3 mb-4">
-                <div>
-                  <p className="text-white font-semibold text-sm font-mono group-hover:text-[#5855d4] transition-colors duration-200">
-                    /{skill.name}
-                  </p>
-                  <p className="text-[#444] text-[10px] font-mono mt-0.5">{skill.domain}</p>
-                </div>
-                <span className="text-[#333] text-[10px] font-mono flex-shrink-0 mt-0.5">
-                  {skill.version}
+              <div className="flex items-center justify-between gap-3 mb-2">
+                <p
+                  className="font-mono"
+                  style={{ color: "var(--text-primary)", fontWeight: 500 }}
+                >
+                  /{skill.name}
+                </p>
+                <span
+                  className="font-mono text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-full"
+                  style={{
+                    color: "var(--accent)",
+                    backgroundColor: "var(--accent-glow)",
+                  }}
+                >
+                  {skill.type}
                 </span>
               </div>
-
-              {/* Description */}
-              <p className="text-[#666] text-xs leading-relaxed mb-4">
+              <p
+                className="text-sm mb-4"
+                style={{ color: "var(--text-muted)", lineHeight: 1.6 }}
+              >
                 {skill.description}
               </p>
-
-              {/* Tags */}
               <div className="flex flex-wrap gap-1.5">
                 {skill.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="text-[10px] px-2 py-0.5 rounded-full bg-[#1e1e1e] border border-[#2a2a2a] text-[#555] font-mono"
+                    className="font-mono text-[10px] px-2 py-0.5 rounded-full"
+                    style={{
+                      color: "var(--text-muted)",
+                      border: "1px solid var(--border)",
+                    }}
                   >
                     {tag}
                   </span>
                 ))}
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
-
-        {/* Footer note */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="text-[#333] text-xs font-mono mt-8 text-center"
-        >
-          This reflects a tooling-level understanding of AI systems not just prompt-level
-          interaction.
-        </motion.p>
       </div>
     </section>
   );
