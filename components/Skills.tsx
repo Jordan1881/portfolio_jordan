@@ -1,8 +1,14 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { skills } from "@/data/content";
+import { prefersReducedMotion } from "@/lib/motion";
 
+gsap.registerPlugin(ScrollTrigger);
+
+// Short framing per category (preserved from the previous design).
 const descriptions: Record<string, string> = {
   Languages: "Writing clean, efficient code across multiple paradigms.",
   Frontend: "Building responsive, interactive UIs with modern frameworks.",
@@ -13,48 +19,80 @@ const descriptions: Record<string, string> = {
 };
 
 export default function Skills() {
-  return (
-    <section id="skills" className="py-24 bg-[#111] text-white">
-      <div className="max-w-5xl mx-auto px-6 sm:px-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-14 text-center"
-        >
-          <h2 className="text-4xl sm:text-5xl font-black tracking-tighter leading-none">
-            Skills that fuel
-            <br />
-            my passion
-          </h2>
-        </motion.div>
+  const rootRef = useRef<HTMLElement>(null);
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {skills.map((group, i) => (
-            <motion.div
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const cards = gsap.utils.toArray<HTMLElement>("[data-skill-card]");
+
+    if (prefersReducedMotion()) {
+      gsap.set(cards, { opacity: 1, y: 0 });
+      return;
+    }
+
+    const ctx = gsap.context(() => {
+      gsap.from(cards, {
+        opacity: 0,
+        y: 40,
+        duration: 0.5,
+        stagger: 0.1,
+        ease: "power2.out",
+        scrollTrigger: { trigger: root, start: "top 75%" },
+      });
+    }, root);
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section
+      ref={rootRef}
+      id="skills"
+      className="relative z-10 px-6 sm:px-10 py-24"
+    >
+      <div className="max-w-6xl mx-auto">
+        <p className="eyebrow mb-4" style={{ color: "var(--accent)" }}>
+          SKILLS
+        </p>
+        <h2
+          className="mb-12"
+          style={{ color: "var(--text-primary)", fontSize: "clamp(2rem, 4vw, 3rem)" }}
+        >
+          The stack I build with
+        </h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {skills.map((group) => (
+            <div
               key={group.category}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.06 }}
-              className="rounded-2xl bg-[#1a1a1a] p-6 border border-[#2a2a2a] hover:border-[#5855d4]/40 transition-colors duration-300"
+              data-skill-card
+              className="rounded-2xl p-6"
+              style={{
+                backgroundColor: "var(--bg-secondary)",
+                borderLeft: "2px solid var(--accent)",
+              }}
             >
-              <div className="flex flex-wrap gap-2 mb-5">
-                {group.items.map((skill) => (
-                  <span
-                    key={skill}
-                    className="text-xs px-2.5 py-1 rounded-full bg-[#242424] text-[#aaa] border border-[#333] font-mono"
-                  >
-                    {skill}
-                  </span>
+              <p
+                className="eyebrow mb-3"
+                style={{ color: "var(--text-muted)", fontSize: "0.75rem" }}
+              >
+                {group.category}
+              </p>
+              <ul className="flex flex-col gap-1.5">
+                {group.items.map((item) => (
+                  <li key={item} style={{ color: "var(--text-secondary)" }}>
+                    {item}
+                  </li>
                 ))}
-              </div>
-              <h3 className="text-white font-semibold text-base">{group.category}</h3>
-              <p className="text-[#555] text-xs mt-1 leading-relaxed">
+              </ul>
+              <p
+                className="mt-4 text-sm"
+                style={{ color: "var(--text-muted)", lineHeight: 1.6 }}
+              >
                 {descriptions[group.category] ?? ""}
               </p>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

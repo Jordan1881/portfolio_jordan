@@ -1,143 +1,186 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { projects, ProjectStatus } from "@/data/content";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { projects } from "@/data/content";
+import { prefersReducedMotion } from "@/lib/motion";
 
-const thumbnailStyles: Record<string, string> = {
-  Questly: "linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f64f59 100%)",
-  "Finance AI Agent": "linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%)",
-  "Notesmith AI": "linear-gradient(135deg, #f7971e 0%, #ffd200 50%, #f7971e 100%)",
-  ArtAffinity: "linear-gradient(135deg, #fc4a1a 0%, #f7b733 50%, #fc4a1a 100%)",
-};
-
-const thumbnailLabels: Record<string, string> = {
-  Questly: "QUESTLY",
-  "Finance AI Agent": "FINANCE AI",
-  "Notesmith AI": "NOTESMITH",
-  ArtAffinity: "ARTAFFINITY",
-};
-
-const statusStyles: Record<ProjectStatus, string> = {
-  Live: "bg-[#dcfce7] text-[#166534]",
-  "In Development": "bg-[#fef9c3] text-[#854d0e]",
-  Prototype: "bg-[#f3f4f6] text-[#374151]",
-};
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Projects() {
-  return (
-    <section id="projects" className="py-24 border-t border-[#e8e8e4]">
-      <div className="max-w-5xl mx-auto px-6 sm:px-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-12"
-        >
-          <h2 className="text-4xl sm:text-5xl font-black tracking-tight text-[#111]">
-            Impressive Works
-          </h2>
-          <p className="text-[#999] text-sm mt-2 max-w-xs leading-relaxed">
-            A selection of projects that showcase my work in AI and engineering.
-          </p>
-        </motion.div>
+  const rootRef = useRef<HTMLElement>(null);
 
-        <div className="grid sm:grid-cols-2 gap-5">
-          {projects.map((project, i) => (
-            <motion.div
-              key={project.name}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.07 }}
-              className="group"
-            >
-              {/* Thumbnail */}
-              <a
-                href={project.live ?? project.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block relative overflow-hidden rounded-2xl mb-3"
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+
+    const panels = gsap.utils.toArray<HTMLElement>("[data-project]");
+
+    if (prefersReducedMotion()) {
+      panels.forEach((p) => gsap.set(p, { opacity: 1, y: 0 }));
+      return;
+    }
+
+    const ctx = gsap.context(() => {
+      panels.forEach((panel) => {
+        const tags = panel.querySelectorAll("[data-tag]");
+
+        // Pin each project for a screen of scroll.
+        ScrollTrigger.create({
+          trigger: panel,
+          start: "top top",
+          end: "+=100%",
+          pin: true,
+          pinSpacing: true,
+        });
+
+        // Fade in as it enters, out as it leaves.
+        gsap.fromTo(
+          panel,
+          { opacity: 0, y: 60 },
+          {
+            opacity: 1,
+            y: 0,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: panel,
+              start: "top 80%",
+              end: "top 30%",
+              scrub: true,
+            },
+          }
+        );
+        gsap.to(panel, {
+          opacity: 0,
+          y: -30,
+          ease: "power2.in",
+          scrollTrigger: {
+            trigger: panel,
+            start: "bottom 60%",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+
+        // Stagger the tech tags in.
+        gsap.from(tags, {
+          opacity: 0,
+          y: 12,
+          stagger: 0.05,
+          scrollTrigger: { trigger: panel, start: "top 70%" },
+        });
+      });
+    }, root);
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section ref={rootRef} id="projects" className="relative z-10">
+      <div className="max-w-6xl mx-auto px-6 sm:px-10 pt-24">
+        <p className="eyebrow mb-4" style={{ color: "var(--accent)" }}>
+          PROJECTS
+        </p>
+      </div>
+
+      {projects.map((project) => (
+        <div
+          key={project.slug}
+          data-project={project.slug}
+          className="min-h-screen flex items-center"
+        >
+          <div className="max-w-6xl mx-auto w-full px-6 sm:px-10 grid md:grid-cols-5 gap-10 items-center">
+            {/* Left column — 60% */}
+            <div className="md:col-span-3">
+              <h3
                 style={{
-                  background: thumbnailStyles[project.name],
-                  aspectRatio: "16/9",
+                  color: "var(--text-primary)",
+                  fontSize: "clamp(2.25rem, 5vw, 3.5rem)",
+                  lineHeight: 1.05,
                 }}
               >
-                <div className="absolute inset-0 flex items-center justify-center">
+                {project.name}
+              </h3>
+
+              <p
+                className="mt-4 max-w-md"
+                style={{ color: "var(--text-secondary)", lineHeight: 1.6 }}
+              >
+                {project.description}
+              </p>
+
+              <ul className="mt-5 flex flex-col gap-2 max-w-md">
+                {project.highlights.map((h, idx) => (
+                  <li
+                    key={idx}
+                    className="flex items-start gap-2 text-sm"
+                    style={{ color: "var(--text-muted)" }}
+                  >
+                    <span style={{ color: "var(--accent)" }}>·</span>
+                    {h}
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-6 flex flex-wrap gap-2">
+                {project.stack.map((tech) => (
                   <span
-                    className="text-white/20 font-black tracking-tighter select-none"
-                    style={{ fontSize: "clamp(2rem, 6vw, 4rem)" }}
+                    key={tech}
+                    data-tag
+                    className="font-mono text-xs px-3 py-1 rounded-full"
+                    style={{
+                      color: "var(--text-secondary)",
+                      border: "1px solid var(--border)",
+                    }}
                   >
-                    {thumbnailLabels[project.name]}
+                    {tech}
                   </span>
-                </div>
-                <div className="absolute bottom-4 left-4 flex flex-wrap gap-1.5">
-                  {project.stack.map((tech) => (
-                    <span
-                      key={tech}
-                      className="text-[10px] px-2 py-0.5 rounded-full bg-black/30 text-white/80 backdrop-blur-sm font-mono"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-                <div className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                  <span className="text-white text-sm">↗</span>
-                </div>
-              </a>
-
-              {/* Label row */}
-              <div className="flex items-start gap-3">
-                <div className="w-6 h-6 rounded-full border border-[#ccc] flex items-center justify-center text-[#666] text-xs flex-shrink-0 mt-0.5">
-                  →
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 flex-wrap mb-0.5">
-                    <a
-                      href={project.live ?? project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[#111] font-semibold hover:text-[#5855d4] transition-colors duration-200"
-                    >
-                      {project.name}
-                    </a>
-                    <span
-                      className={`text-[10px] px-2 py-0.5 rounded-full font-mono ${statusStyles[project.status]}`}
-                    >
-                      {project.status}
-                    </span>
-                  </div>
-
-                  <p className="text-[#999] text-xs leading-relaxed mb-2">
-                    {project.description}
-                  </p>
-
-                  {/* Highlights */}
-                  <ul className="space-y-1 mb-3">
-                    {project.highlights.map((h, idx) => (
-                      <li
-                        key={idx}
-                        className="text-[#777] text-xs leading-relaxed flex items-start gap-1.5"
-                      >
-                        <span className="text-[#5855d4] flex-shrink-0 mt-px">·</span>
-                        {h}
-                      </li>
-                    ))}
-                  </ul>
-
-                  <Link
-                    href={`/projects/${project.slug}`}
-                    className="text-[#5855d4] text-xs font-medium hover:underline underline-offset-2"
-                  >
-                    Case Study →
-                  </Link>
-                </div>
+                ))}
               </div>
-            </motion.div>
-          ))}
+
+              <div className="mt-7 flex flex-wrap items-center gap-5">
+                <a
+                  href={project.live ?? project.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-mono text-sm"
+                  style={{ color: "var(--accent)" }}
+                >
+                  View Project →
+                </a>
+                <Link
+                  href={`/projects/${project.slug}`}
+                  className="font-mono text-sm"
+                  style={{ color: "var(--text-muted)" }}
+                >
+                  Case Study →
+                </Link>
+              </div>
+            </div>
+
+            {/* Right column — 40% screenshot placeholder */}
+            <div className="md:col-span-2">
+              <div
+                className="w-full rounded-2xl flex items-center justify-center"
+                style={{
+                  aspectRatio: "4 / 3",
+                  backgroundColor: "var(--bg-secondary)",
+                  border: "1px solid var(--border)",
+                }}
+              >
+                <span
+                  className="font-mono text-xs uppercase tracking-widest"
+                  style={{ color: "var(--text-muted)" }}
+                >
+                  Screenshot
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      ))}
     </section>
   );
 }
