@@ -1,129 +1,130 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { personal } from "@/data/content";
+import { prefersReducedMotion } from "@/lib/motion";
+
+gsap.registerPlugin(ScrollTrigger);
+
+const links = [
+  { label: "GitHub", href: personal.github, value: "github.com/Jordan1881" },
+  { label: "LinkedIn", href: personal.linkedin, value: "linkedin.com/in/yarden-biton" },
+  { label: "Email", href: `mailto:${personal.email}`, value: personal.email },
+];
 
 export default function Contact() {
+  const rootRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const items = gsap.utils.toArray<HTMLElement>("[data-contact-reveal]");
+
+    if (prefersReducedMotion()) {
+      gsap.set(items, { opacity: 1, y: 0 });
+      return;
+    }
+
+    const ctx = gsap.context(() => {
+      gsap.from(items, {
+        opacity: 0,
+        y: 24,
+        duration: 0.6,
+        stagger: 0.08,
+        ease: "power2.out",
+        scrollTrigger: { trigger: root, start: "top 80%" },
+      });
+    }, root);
+
+    return () => ctx.revert();
+  }, []);
+
+  const hoverIn = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (prefersReducedMotion()) return;
+    gsap.to(e.currentTarget, {
+      x: 8,
+      color: "#5855d4",
+      duration: 0.3,
+      ease: "power2.out",
+    });
+  };
+  const hoverOut = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (prefersReducedMotion()) return;
+    gsap.to(e.currentTarget, {
+      x: 0,
+      color: "#e8e8e8",
+      duration: 0.3,
+      ease: "power2.out",
+    });
+  };
+
   return (
-    <>
-      {/* Contact section */}
-      <section id="contact" className="py-24 border-t border-[#e8e8e4] bg-[#f9f9f7]">
-        <div className="max-w-5xl mx-auto px-6 sm:px-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <p className="text-[#999] text-sm font-mono mb-3">
-              That&apos;s all for now.
-            </p>
-            <h2 className="text-4xl sm:text-5xl font-black tracking-tight text-[#111] leading-tight mb-14">
-              Got a project in mind?
-              <br />
-              Let&apos;s talk
-            </h2>
-          </motion.div>
+    <section
+      ref={rootRef}
+      id="contact"
+      className="relative z-10 px-6 sm:px-10 py-32 min-h-screen flex flex-col justify-center"
+    >
+      <div className="max-w-4xl mx-auto w-full">
+        <p
+          className="eyebrow mb-4"
+          data-contact-reveal
+          style={{ color: "var(--accent)" }}
+        >
+          CONTACT
+        </p>
+        <h2
+          data-contact-reveal
+          className="mb-16"
+          style={{
+            color: "var(--text-primary)",
+            fontSize: "clamp(2.5rem, 6vw, 3.5rem)",
+          }}
+        >
+          Let&apos;s build something.
+        </h2>
 
-          {/* Horizontal line + floating button */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="relative mb-16"
-          >
-            <div className="border-t border-[#bbb]" />
-            <a
-              href={`mailto:${personal.email}`}
-              className="absolute right-0 -top-7 w-[7.5rem] h-[7.5rem] rounded-full bg-[#5855d4] text-white text-sm font-semibold flex items-center justify-center text-center leading-tight hover:bg-[#4340c0] hover:scale-105 transition-all duration-300 shadow-xl"
+        <ul className="flex flex-col">
+          {links.map((link) => (
+            <li
+              key={link.label}
+              data-contact-reveal
+              style={{ borderTop: "1px solid var(--border)" }}
             >
-              Get in<br />touch
-            </a>
-          </motion.div>
-
-          {/* Contact links */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="grid grid-cols-2 sm:grid-cols-3 gap-8"
-          >
-            <div>
-              <p className="text-[#999] text-xs font-mono uppercase tracking-widest mb-2">
-                Email
-              </p>
               <a
-                href={`mailto:${personal.email}`}
-                className="text-[#111] text-sm hover:text-[#5855d4] transition-colors"
+                href={link.href}
+                target={link.href.startsWith("mailto:") ? undefined : "_blank"}
+                rel={
+                  link.href.startsWith("mailto:")
+                    ? undefined
+                    : "noopener noreferrer"
+                }
+                onMouseEnter={hoverIn}
+                onMouseLeave={hoverOut}
+                className="flex items-baseline justify-between gap-4 py-6 font-mono"
+                style={{ color: "var(--text-secondary)" }}
               >
-                {personal.email}
+                <span className="uppercase tracking-widest text-sm">
+                  {link.label}
+                </span>
+                <span className="text-sm" style={{ color: "var(--text-muted)" }}>
+                  {link.value}
+                </span>
               </a>
-            </div>
-            <div>
-              <p className="text-[#999] text-xs font-mono uppercase tracking-widest mb-2">
-                GitHub
-              </p>
-              <a
-                href={personal.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#111] text-sm hover:text-[#5855d4] transition-colors"
-              >
-                @Jordan1881
-              </a>
-            </div>
-            <div>
-              <p className="text-[#999] text-xs font-mono uppercase tracking-widest mb-2">
-                LinkedIn
-              </p>
-              <a
-                href={personal.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#111] text-sm hover:text-[#5855d4] transition-colors"
-              >
-                yarden-biton
-              </a>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+            </li>
+          ))}
+        </ul>
 
-      {/* Massive footer */}
-      <footer className="bg-[#111] text-white pt-10 pb-6" style={{ overflow: "hidden" }}>
-        <div className="max-w-5xl mx-auto px-6 sm:px-10">
-          <div className="flex items-center justify-between mb-4">
-            <p className="text-[#555] text-sm">your friendly ai builder</p>
-            <a
-              href={personal.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full border border-[#333] flex items-center justify-center text-white hover:border-white transition-colors duration-200 text-sm"
-              aria-label="GitHub"
-            >
-              ↗
-            </a>
-          </div>
-        </div>
-
-        {/* Big overflowing name */}
-        <div className="px-4 mt-2">
-          <p
-            className="text-white font-black leading-none tracking-tighter whitespace-nowrap"
-            style={{ fontSize: "clamp(3.5rem, 14vw, 14rem)" }}
-          >
-            Yarden Biton
-          </p>
-        </div>
-
-        <div className="max-w-5xl mx-auto px-6 sm:px-10 mt-6 pt-4 border-t border-[#222]">
-          <p className="text-[#444] text-xs">
-            Built with Next.js & Tailwind · {new Date().getFullYear()}
-          </p>
-        </div>
-      </footer>
-    </>
+        <p
+          data-contact-reveal
+          className="mt-20 font-mono text-xs"
+          style={{ color: "var(--text-muted)" }}
+        >
+          {personal.name} · Built with Next.js, Three.js & GSAP ·{" "}
+          {new Date().getFullYear()}
+        </p>
+      </div>
+    </section>
   );
 }
