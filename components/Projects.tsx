@@ -24,52 +24,28 @@ export default function Projects() {
     }
 
     const ctx = gsap.context(() => {
+      // Natural continuous flow: each project fades + slides up as it enters
+      // the viewport. No pinning, no sticking.
       panels.forEach((panel) => {
         const tags = panel.querySelectorAll("[data-tag]");
 
-        // Pin each project for a screen of scroll.
-        ScrollTrigger.create({
-          trigger: panel,
-          start: "top top",
-          end: "+=100%",
-          pin: true,
-          pinSpacing: true,
-        });
-
-        // Fade in as it enters, out as it leaves.
-        gsap.fromTo(
-          panel,
-          { opacity: 0, y: 60 },
-          {
-            opacity: 1,
-            y: 0,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: panel,
-              start: "top 80%",
-              end: "top 30%",
-              scrub: true,
-            },
-          }
-        );
-        gsap.to(panel, {
+        gsap.from(panel, {
           opacity: 0,
-          y: -30,
-          ease: "power2.in",
+          y: 60,
+          duration: 0.7,
+          ease: "power2.out",
           scrollTrigger: {
             trigger: panel,
-            start: "bottom 60%",
-            end: "bottom top",
-            scrub: true,
+            start: "top 82%",
+            toggleActions: "play none none reverse",
           },
         });
 
-        // Stagger the tech tags in.
         gsap.from(tags, {
           opacity: 0,
           y: 12,
           stagger: 0.05,
-          scrollTrigger: { trigger: panel, start: "top 70%" },
+          scrollTrigger: { trigger: panel, start: "top 72%" },
         });
       });
     }, root);
@@ -89,7 +65,7 @@ export default function Projects() {
         <div
           key={project.slug}
           data-project={project.slug}
-          className="min-h-screen flex items-center"
+          className="py-16 sm:py-24"
         >
           <div className="max-w-6xl mx-auto w-full px-6 sm:px-10 grid md:grid-cols-5 gap-10 items-center">
             {/* Left column — 60% */}
