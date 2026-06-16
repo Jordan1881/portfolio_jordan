@@ -97,7 +97,7 @@ export default function Projects() {
               <h3
                 style={{
                   color: "var(--text-primary)",
-                  fontSize: "clamp(2.25rem, 5vw, 3.5rem)",
+                  fontSize: "clamp(2.5rem, 5vw, 4rem)",
                   lineHeight: 1.05,
                 }}
               >

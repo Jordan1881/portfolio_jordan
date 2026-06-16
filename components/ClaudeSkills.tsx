@@ -84,7 +84,7 @@ export default function ClaudeSkills() {
         </p>
         <h2
           className="mb-3"
-          style={{ color: "var(--text-primary)", fontSize: "clamp(2rem, 4vw, 3rem)" }}
+          style={{ color: "var(--text-primary)", fontSize: "clamp(2.5rem, 5vw, 4rem)" }}
         >
           Tooling I built for Claude
         </h2>

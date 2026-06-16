@@ -57,8 +57,8 @@ export default function Hero() {
         className="font-bold tracking-tight"
         style={{
           color: "var(--text-primary)",
-          fontSize: "clamp(2.75rem, 8vw, 5rem)",
-          lineHeight: 1.05,
+          fontSize: "clamp(3.5rem, 9vw, 6.5rem)",
+          lineHeight: 1.02,
         }}
       >
         {personal.name}
