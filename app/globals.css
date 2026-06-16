@@ -4,20 +4,20 @@
    Design tokens — soft-dark palette + typography
    ============================================================ */
 :root {
-  /* Surfaces */
-  --bg-primary: #121218; /* main background — dark w/ blue-purple undertone */
-  --bg-secondary: #1a1a24; /* card / section backgrounds */
-  --bg-tertiary: #22222e; /* elevated surfaces, navbar on reveal */
+  /* Surfaces — elegant snow-white light theme */
+  --bg-primary: #F6F7F8; /* main background — cool neutral snow-white */
+  --bg-secondary: #ffffff; /* card / section backgrounds — elevated white */
+  --bg-tertiary: #ffffff; /* navbar on reveal (component adds blur/alpha) */
 
   /* Text */
-  --text-primary: #ffffff; /* headings */
-  --text-secondary: #e8e8e8; /* body text */
-  --text-muted: #8888a0; /* captions, metadata, subtle text */
+  --text-primary: #14141A; /* headings — ink blue-black */
+  --text-secondary: #3A3A42; /* body text — dark slate */
+  --text-muted: #86868F; /* captions, metadata, subtle text */
 
   /* Accent */
   --accent: #5855d4; /* indigo */
-  --accent-glow: rgba(88, 85, 212, 0.15); /* hover glow */
-  --border: rgba(255, 255, 255, 0.06); /* subtle dividers */
+  --accent-glow: rgba(88, 85, 212, 0.12); /* hover glow */
+  --border: rgba(20, 20, 26, 0.08); /* subtle dividers */
 
   /* Font families are bound to the next/font variables in layout.tsx.
      Aliased here so components can reference a stable name. */
