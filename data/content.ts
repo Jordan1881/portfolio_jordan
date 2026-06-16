@@ -1,7 +1,7 @@
 export const personal = {
   name: "Yarden Biton",
   title: "AI Engineer & Full Stack Developer",
-  bio: "Third-year Information Systems student at Yezreel Valley College, Israel, specializing in AI agent architectures and full-stack development.",
+  bio: "Information Systems graduate (B.Sc.) from Yezreel Valley College, Israel, specializing in AI agent architectures and full-stack development.",
   focus:
     "I design tool-based AI systems including MCP server architectures and LLM-powered agents and build production-grade applications with React, TypeScript, and Python. My foundation includes strong OOP, data structures, QA methodology, and system design. Currently building toward my first role as an Applied AI Engineer.",
   email: "jordanstu21@gmail.com",
@@ -16,7 +16,7 @@ export const projects = [
     name: "Questly",
     slug: "questly",
     status: "Live" as ProjectStatus,
-    image: "/projects/questly/screenshot.png",
+    image: "/questly-text.svg",
     highlights: [
       "Complete real Jira Cloud tickets to earn XP, level up, and redeem team rewards",
       "Full-stack React 19 + Express + PostgreSQL, deployed on Vercel & Railway",
