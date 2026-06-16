@@ -15,61 +15,65 @@ export const projects = [
   {
     name: "Questly",
     slug: "questly",
-    status: "In Development" as ProjectStatus,
+    status: "Live" as ProjectStatus,
+    image: "/projects/questly/screenshot.png",
     highlights: [
-      "Turns tasks into RPG quests — earn XP, levels, and rewards for real work",
-      "Global state via Zustand — lightweight and scalable without Redux overhead",
-      "Jira API integration planned to sync real work tasks into the quest board",
+      "Complete real Jira Cloud tickets to earn XP, level up, and redeem team rewards",
+      "Full-stack React 19 + Express + PostgreSQL, deployed on Vercel & Railway",
+      "Atlassian OAuth, Playwright E2E, Docker, and CI via GitHub Actions",
     ],
     description:
-      "Gamified task management system that turns your to-do list into an RPG quest board.",
-    stack: ["React", "TypeScript", "Zustand", "Tailwind", "Jira API"],
+      "Gamified task management powered by Jira — complete real tickets, earn XP, level up, and redeem rewards as a team.",
+    stack: ["React", "TypeScript", "Node.js", "PostgreSQL", "Jira Cloud", "Playwright"],
     github: "https://github.com/Jordan1881/Questly",
-    live: "https://questly-gilt.vercel.app/",
+    live: "https://questly-gilt.vercel.app",
   },
   {
-    name: "Finance AI Agent",
-    slug: "finance-ai",
+    name: "Finlens",
+    slug: "finlens",
     status: "Live" as ProjectStatus,
+    image: "/finlens-text.svg",
     highlights: [
-      "MCP tool-based agent with 5 discrete tools — the LLM orchestrates, not guesses",
-      "Clean tool separation makes each function independently testable",
-      "Mirrors how production AI systems are actually architected",
+      "Async pipeline: S3 → Step Functions → Lambda → Amazon Bedrock (Claude)",
+      "Reachable via REST API, a remote MCP server, or a Next.js dashboard",
+      "Multi-tenant, Hebrew/English statements, fully serverless on AWS",
     ],
     description:
-      "Tool-based AI agent for transaction categorization, monthly reports, and budget suggestions using MCP architecture.",
-    stack: ["Python", "MCP", "AI Agents"],
-    github: "https://github.com/Jordan1881/Finance-MCP-Agent-UI",
-    live: "https://github.com/Jordan1881/Finance-MCP-Agent-UI",
+      "Remote MCP product for bank-statement analysis on AWS — upload a PDF or CSV and get structured financial summaries and narrative insights.",
+    stack: ["AWS", "Bedrock", "MCP", "Next.js", "TypeScript", "DynamoDB"],
+    github: "https://github.com/Jordan1881/Finlens",
+    live: null,
+  },
+  {
+    name: "Nati's",
+    slug: "natis",
+    status: "Live" as ProjectStatus,
+    image: "/natis-text.svg",
+    highlights: [
+      "A non-technical operator runs a real Friday lunch service on it",
+      "Prints kitchen bons + customer slips; end-of-day item & payment summaries",
+      "Express + Drizzle + PostgreSQL, cookie-session auth, Vitest-tested",
+    ],
+    description:
+      "Full-stack order management for a Friday-only home restaurant — phone/WhatsApp orders, printed kitchen bons & customer slips, and end-of-day summaries.",
+    stack: ["Express", "Drizzle ORM", "PostgreSQL", "TypeScript", "Vitest"],
+    github: "https://github.com/Jordan1881/Nati-s-",
+    live: null,
   },
   {
     name: "Notesmith AI",
     slug: "notesmith",
     status: "In Development" as ProjectStatus,
+    image: "/notesmith-ai-text.svg",
     highlights: [
-      "Agentic summarization — the LLM decides how to chunk and prioritize, not just truncate",
-      "Handles variable-length documents with structured, consistent output",
-      "Document-type awareness formats output based on content structure",
+      "Token-aware chunking handles large documents safely",
+      "Numeric word-target keeps summaries within ±10% of the requested length",
+      "Hebrew RTL/LTR-aware, multi-pass consolidation, Markdown export",
     ],
     description:
-      "LLM-powered summarization tool built on an agentic architecture for intelligent document processing.",
-    stack: ["Python", "LLM", "AI Agents"],
+      "AI exam summarizer with precise length control — token-aware chunking, multi-pass summaries, and structured Hebrew output.",
+    stack: ["Python", "OpenAI API", "Streamlit", "tiktoken"],
     github: "https://github.com/Jordan1881/Notesmith-AI",
-    live: null,
-  },
-  {
-    name: "ArtAffinity",
-    slug: "artaffinity",
-    status: "Prototype" as ProjectStatus,
-    highlights: [
-      "Combines social feed with artist profiles — discovery meets self-expression",
-      "Gallery-first UI designed for independent artists and art buyers",
-      "Future concept: 360° virtual gallery rooms per artist",
-    ],
-    description:
-      "Artist marketplace with buyer profiles, social feed, and a virtual gallery concept for discovering independent creators.",
-    stack: ["Full Stack"],
-    github: "https://github.com/Jordan1881/ArtAffinity",
     live: null,
   },
 ];
@@ -97,175 +101,188 @@ export const caseStudies: Record<string, CaseStudy> = {
   questly: {
     name: "Questly",
     slug: "questly",
-    tagline: "Your to-do list, reimagined as an RPG quest board",
-    status: "In Development",
-    stack: ["React", "TypeScript", "Zustand", "Tailwind", "Jira API"],
+    tagline: "Your task list, reimagined as a Jira-powered RPG quest board",
+    status: "Live",
+    stack: ["React", "TypeScript", "Node.js", "PostgreSQL", "Jira Cloud", "Playwright"],
     github: "https://github.com/Jordan1881/Questly",
-    live: "https://questly-gilt.vercel.app/",
+    live: "https://questly-gilt.vercel.app",
     screenshot: true,
     problem: {
-      headline: "Task management tools are functional but forgettable",
-      body: "Most to-do apps get abandoned within weeks. They show you what needs to be done but give you no reason to care. Questly transforms your task list into an RPG quest board — completing tasks grants XP, levels you up, and unlocks rewards. The same work, wrapped in a system that makes you want to come back.",
+      headline: "Task tools are functional but forgettable",
+      body: "Most task apps show you what needs doing but give you no reason to care, and they get abandoned within weeks. Questly turns real work into a game: it connects to Jira Cloud, and completing actual tickets grants XP, levels you up, and unlocks team rewards. The same work — wrapped in a system that makes a team want to come back.",
     },
     architecture: {
       description:
-        "Component-based React SPA with Zustand for global state. Each 'task' is modeled as a 'quest' with metadata: difficulty tier, XP value, category, and deadline. The Zustand store manages the full quest lifecycle — creation, completion, XP calculation, and level progression.",
+        "A React 19 SPA backed by an Express API and PostgreSQL. Questly authenticates with Jira Cloud over Atlassian OAuth, syncs real tickets, and runs them through an XP engine that handles leveling, leaderboards, and reward redemption. The app is containerized with Docker, deployed across Vercel (web) and Railway (API), and covered by Playwright end-to-end tests in CI.",
       nodes: [
-        { label: "Quest Board UI", sub: "React Components" },
-        { label: "Zustand Store", sub: "Global State" },
-        { label: "XP Engine", sub: "Level & Reward Logic" },
-        { label: "Jira Sync", sub: "API Integration (planned)" },
+        { label: "React SPA", sub: "Quest board UI" },
+        { label: "Express API", sub: "REST + auth" },
+        { label: "Atlassian OAuth", sub: "Jira Cloud sync" },
+        { label: "XP Engine", sub: "Levels & rewards" },
+        { label: "PostgreSQL", sub: "Persistence" },
       ],
-      flow: "Quest Input → Zustand Store → XP Engine → Level Up / Reward → Quest Board Update",
+      flow: "Jira ticket → OAuth sync → XP Engine → Level up / reward → Quest board update",
     },
     techDecisions: [
       {
-        decision: "Zustand over Redux",
+        decision: "Real Jira Cloud integration over a mock backlog",
         reason:
-          "Lighter API, sufficient for this scope. No boilerplate, no action creators — just a store that scales with the app.",
+          "Gamifying real work is the whole point. Atlassian OAuth + ticket sync makes the rewards meaningful instead of a toy.",
       },
       {
-        decision: "TypeScript throughout",
+        decision: "PostgreSQL for state",
         reason:
-          "Type safety on quest metadata prevents subtle bugs. Also produces portfolio-ready, production-grade code.",
+          "XP, levels, leaderboards, and reward ledgers are relational — a real database keeps them consistent across a team.",
       },
       {
-        decision: "Tailwind for styling",
+        decision: "Playwright E2E in CI",
         reason:
-          "Rapid iteration on UI without writing custom CSS. Consistent design tokens with zero configuration overhead.",
+          "The XP/reward flows span auth, sync, and persistence; end-to-end tests catch regressions a unit test can't.",
       },
     ],
     challenges: [
-      "Designing the XP/reward system logic to feel fair and genuinely motivating — not arbitrary or gameable.",
-      "Structuring the Zustand store to handle growing complexity as quest categories, filters, and history are added.",
+      "Designing the XP and reward economy to feel fair and motivating rather than arbitrary or gameable.",
+      "Keeping Questly state in sync with Jira without double-counting tickets or losing progress on re-sync.",
     ],
   },
-  "finance-ai": {
-    name: "Finance AI Agent",
-    slug: "finance-ai",
-    tagline: "A tool-based AI agent that actually understands your money",
+  finlens: {
+    name: "Finlens",
+    slug: "finlens",
+    tagline: "Bank statements in, financial insight out — over REST, MCP, or web",
     status: "Live",
-    stack: ["Python", "MCP", "AI Agents"],
-    github: "https://github.com/Jordan1881/Finance-MCP-Agent-UI",
-    live: "https://github.com/Jordan1881/Finance-MCP-Agent-UI",
+    stack: ["AWS", "Bedrock", "MCP", "Next.js", "TypeScript", "DynamoDB"],
+    github: "https://github.com/Jordan1881/Finlens",
+    live: null,
     problem: {
-      headline: "Manual finance tracking is tedious. Generic AI advice is shallow.",
-      body: "Most people don't know where their money goes. Spreadsheets require constant effort, and generic AI chat gives vague, one-size-fits-all advice. Finance AI Agent uses a proper tool-based architecture — the LLM orchestrates purpose-built tools rather than trying to do everything in a single prompt. The result is accurate categorization, real monthly reports, and actionable budget suggestions.",
+      headline: "Manual finance tracking is tedious; generic AI advice is shallow",
+      body: "People don't know where their money goes, and pasting a statement into a chatbot gives vague, unreliable answers. Finlens is a proper tool-based system: upload a monthly bank statement as PDF or CSV (Hebrew or English) and an async pipeline produces structured summaries and narrative spending insights — reachable from a web dashboard, a REST API, or directly from AI tools over a remote MCP server.",
     },
     architecture: {
       description:
-        "Built on MCP (Model Context Protocol) architecture. The LLM acts as an orchestrator: it reads user intent, selects the correct tool, and calls it with the right parameters. Each of the 5 tools has a single, well-defined responsibility. No tool does more than one job — making the system testable, debuggable, and extensible.",
+        "Fully serverless on AWS. Clients (web, MCP, REST) hit an API Gateway HTTP API fronting Lambda handlers. Uploaded statements land in S3, which triggers a Step Functions workflow that calls Amazon Bedrock (Claude) to analyze the document. Results and per-tenant metadata live in DynamoDB, with tenancy derived from an API key or Cognito JWT.",
       nodes: [
-        { label: "User Input", sub: "Natural language" },
-        { label: "LLM Orchestrator", sub: "Intent → Tool Selection" },
-        { label: "upload_transactions", sub: "Ingest CSV/data" },
-        { label: "categorize_transactions", sub: "Tag & classify" },
-        { label: "monthly_report", sub: "Generate summary" },
-        { label: "budget_suggestions", sub: "AI recommendations" },
+        { label: "Web / MCP / REST", sub: "Clients" },
+        { label: "API Gateway", sub: "HTTP API" },
+        { label: "Lambda", sub: "Handlers + MCP" },
+        { label: "S3 + Step Functions", sub: "Async pipeline" },
+        { label: "Bedrock (Claude)", sub: "Analysis" },
+        { label: "DynamoDB", sub: "Multi-tenant data" },
       ],
-      flow: "User Input → LLM → Tool Selection → Tool Execution → Structured Response",
+      flow: "Upload (PDF/CSV) → S3 event → Step Functions → Bedrock → structured summary + insights",
     },
     techDecisions: [
       {
-        decision: "MCP over a monolithic AI call",
+        decision: "Remote MCP server, not just a REST API",
         reason:
-          "Separates concerns cleanly. Each tool is independently testable and mirrors how production AI systems are actually built at scale.",
+          "Exposing the tools over MCP lets AI clients call Finlens directly — the analysis becomes composable inside agent workflows.",
       },
       {
-        decision: "Python for backend",
+        decision: "Async S3 → Step Functions → Bedrock pipeline",
         reason:
-          "Rich data processing ecosystem. Pandas for transaction handling, clean integration with LLM APIs, fast iteration.",
+          "Statement analysis is slow and bursty. Decoupling upload from analysis keeps the API responsive and the workflow observable.",
       },
       {
-        decision: "5 discrete tools (not more)",
+        decision: "Multi-tenant metadata in DynamoDB",
         reason:
-          "Deliberately scoped. Every tool boundary was a design decision — deciding what logic belongs in the agent vs. in the tool itself.",
+          "Tenant isolation by API key or Cognito JWT keeps each user's statements separate without standing up a relational server.",
       },
     ],
     challenges: [
-      "Designing tool boundaries: deciding what logic belongs in the LLM orchestration layer vs. the tool implementation.",
-      "Prompt engineering to ensure the LLM selects the correct tool without over-calling or hallucinating tool inputs.",
+      "Parsing inconsistent bank statements in both Hebrew and English into a structured shape Bedrock can reason over.",
+      "Keeping tenant data isolated across the REST, MCP, and web surfaces from a single backend.",
+    ],
+  },
+  natis: {
+    name: "Nati's",
+    slug: "natis",
+    tagline: "A real Friday-only home restaurant, run from one screen",
+    status: "Live",
+    stack: ["Express", "Drizzle ORM", "PostgreSQL", "TypeScript", "Vitest"],
+    github: "https://github.com/Jordan1881/Nati-s-",
+    live: null,
+    problem: {
+      headline: "A paper-notebook kitchen that needed to survive a real lunch service",
+      body: "NATI's is a Friday-only home restaurant. The operator — a non-technical relative — collected orders by phone and WhatsApp in a paper notebook, then hand-wrote kitchen tickets every Friday morning. Nati's replaces that: he enters orders during the week and, on Friday, the system prints a kitchen bon for the chef and a customer slip for each bag, then produces end-of-day item quantities and a payment breakdown.",
+    },
+    architecture: {
+      description:
+        "A single-operator web app with an Express + TypeScript backend, Drizzle ORM over PostgreSQL, and cookie-session authentication. Order, customer, and menu data flow through typed routes into a print service that renders kitchen bons and customer slips, plus an end-of-day summary. The backend is covered by a Vitest suite across schema, auth, routes, and the orders service.",
+      nodes: [
+        { label: "Operator UI", sub: "Order entry" },
+        { label: "Express API", sub: "Typed routes" },
+        { label: "Drizzle + PostgreSQL", sub: "Orders & menu" },
+        { label: "Print Service", sub: "Bons & slips" },
+        { label: "Day Summary", sub: "Items + payments" },
+      ],
+      flow: "Order entry → PostgreSQL → Friday print (kitchen bon + customer slip) → end-of-day summary",
+    },
+    techDecisions: [
+      {
+        decision: "Drizzle ORM over a hand-rolled query layer",
+        reason:
+          "Type-safe schema and migrations keep the data model honest as orders, customers, and menu items evolve.",
+      },
+      {
+        decision: "Server-rendered print documents",
+        reason:
+          "Kitchen bons and customer slips must print identically every time — rendering them on the server makes the layout deterministic.",
+      },
+      {
+        decision: "Vitest coverage across routes and services",
+        reason:
+          "It runs a real Friday service; tests on auth, orders, and summaries are what make changes safe to ship mid-week.",
+      },
+    ],
+    challenges: [
+      "Designing an interface a ~60-year-old non-technical operator can use with zero training under real lunch-rush pressure.",
+      "Getting print layouts for kitchen bons and customer slips reliable across his laptop and phone.",
     ],
   },
   notesmith: {
     name: "Notesmith AI",
     slug: "notesmith",
-    tagline: "Intelligent document summarization — not just shorter, actually better",
+    tagline: "Summaries that respect length, structure, and Hebrew",
     status: "In Development",
-    stack: ["Python", "LLM", "AI Agents"],
+    stack: ["Python", "OpenAI API", "Streamlit", "tiktoken"],
     github: "https://github.com/Jordan1881/Notesmith-AI",
     live: null,
     problem: {
       headline: "Summarization tools truncate. Notesmith understands.",
-      body: "Long documents and notes are hard to process quickly. Simple summarization — send everything to an LLM and ask it to shorten — breaks down on variable-length inputs and loses important structure. Notesmith uses an agentic pipeline where the LLM decides how to chunk, what to prioritize, and how to format output based on document type.",
+      body: "Sending a whole document to an LLM and asking it to 'make it shorter' breaks on long inputs and ignores how much summary you actually want. Notesmith is an exam-prep summarizer with precise length control: it counts tokens to decide when to chunk, summarizes in multiple passes, and expands or compresses to hit a numeric word target — producing structured Hebrew summaries optimized for studying.",
     },
     architecture: {
       description:
-        "Agentic summarization pipeline with document-type awareness. The agent first analyzes document structure, then decides on a chunking strategy, then summarizes with awareness of what's important vs. filler. Output format adapts to content — bullet points for notes, narrative for articles, key facts for reports.",
+        "A Python pipeline with a Streamlit UI. Text is extracted from PDF/TXT/DOCX, then tiktoken counts tokens to decide between a single-pass summary and chunked summarization. Chunk summaries are consolidated in a final pass, and a length-control step expands or compresses the output to stay within ±10% of the requested word count, with automatic RTL/LTR handling for Hebrew.",
       nodes: [
-        { label: "Document Input", sub: "Raw text / file" },
-        { label: "Structure Analyzer", sub: "Type detection" },
-        { label: "Chunking Strategy", sub: "LLM decides splits" },
-        { label: "Priority Ranker", sub: "What matters most" },
-        { label: "Formatted Output", sub: "Type-aware summary" },
+        { label: "Document Input", sub: "PDF / TXT / DOCX" },
+        { label: "Token Analyzer", sub: "tiktoken" },
+        { label: "Chunking Strategy", sub: "Decide splits" },
+        { label: "Multi-pass Summary", sub: "Consolidate" },
+        { label: "Length Control", sub: "±10% target" },
+        { label: "Markdown Export", sub: "Study output" },
       ],
-      flow: "Document → Structure Analysis → Chunking → Priority Ranking → Formatted Summary",
+      flow: "Document → token analysis → chunk → multi-pass summary → length control → Markdown",
     },
     techDecisions: [
       {
-        decision: "Agentic approach over a simple prompt",
+        decision: "Token-aware chunking instead of naive truncation",
         reason:
-          "Handles variable-length input better. A single prompt breaks on long documents; an agent adapts its strategy to the content.",
+          "A single prompt breaks on long documents; counting tokens first lets the system handle variable-length input safely.",
       },
       {
-        decision: "Document-type awareness",
+        decision: "Numeric word target with a correction pass",
         reason:
-          "A meeting note and a research paper need different summaries. Detecting type first improves output quality significantly.",
+          "'Shorter' is vague. A numeric target plus an expand/compress pass keeps output within ±10% of what the user asked for.",
+      },
+      {
+        decision: "Streamlit for the UI",
+        reason:
+          "Lets the project stay focused on the summarization logic while still giving a clean, usable interface.",
       },
     ],
     challenges: [
-      "Handling edge cases in document length and structure — badly formatted inputs, code-heavy docs, multi-language content.",
-      "Making the output genuinely useful, not just shorter. Shorter is easy. Useful requires judgment about what matters.",
-    ],
-  },
-  artaffinity: {
-    name: "ArtAffinity",
-    slug: "artaffinity",
-    tagline: "A social marketplace where art discovery feels like a gallery visit",
-    status: "Prototype",
-    stack: ["Full Stack"],
-    github: "https://github.com/Jordan1881/ArtAffinity",
-    live: null,
-    problem: {
-      headline: "Independent artists have no platform that's both social and gallery-like",
-      body: "Existing art marketplaces feel transactional. Social platforms feel chaotic. ArtAffinity sits in between — a feed-first platform where art buyers discover work organically, and artists can build a presence that feels like their own gallery, not just a shop.",
-    },
-    architecture: {
-      description:
-        "Full-stack CRUD application with distinct user roles: artists and buyers. Artists get profile pages that function as mini-galleries. Buyers see a discovery feed with filtering by style, medium, and price range. The future concept includes 360° virtual gallery rooms per artist — an immersive browsing experience.",
-      nodes: [
-        { label: "Artist Profiles", sub: "Gallery-style pages" },
-        { label: "Buyer Discovery", sub: "Social feed + filters" },
-        { label: "Art Listings", sub: "CRUD operations" },
-        { label: "Virtual Gallery", sub: "360° rooms (concept)" },
-      ],
-      flow: "Artist Upload → Listing Created → Buyer Feed → Profile Visit → Gallery Room",
-    },
-    techDecisions: [
-      {
-        decision: "UI/UX-first approach",
-        reason:
-          "The product's value is in the browsing experience. Backend complexity was deliberately kept minimal to prioritize the frontend feel.",
-      },
-      {
-        decision: "Feed-based discovery",
-        reason:
-          "Mirrors social patterns users already understand, lowering the learning curve while surfacing art naturally.",
-      },
-    ],
-    challenges: [
-      "Designing a feed that serves two very different goals: discovery for buyers and self-expression for artists.",
-      "Balancing the social feel (engagement, follows, likes) with the commerce layer (pricing, inquiries, purchases).",
+      "Hitting an exact word-count target reliably while keeping the summary coherent across multiple passes.",
+      "Handling Hebrew RTL output and mixed-direction text cleanly alongside English source material.",
     ],
   },
 };
