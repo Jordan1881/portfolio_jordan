@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { projects } from "@/data/content";
@@ -24,52 +25,28 @@ export default function Projects() {
     }
 
     const ctx = gsap.context(() => {
+      // Natural continuous flow: each project fades + slides up as it enters
+      // the viewport. No pinning, no sticking.
       panels.forEach((panel) => {
         const tags = panel.querySelectorAll("[data-tag]");
 
-        // Pin each project for a screen of scroll.
-        ScrollTrigger.create({
-          trigger: panel,
-          start: "top top",
-          end: "+=100%",
-          pin: true,
-          pinSpacing: true,
-        });
-
-        // Fade in as it enters, out as it leaves.
-        gsap.fromTo(
-          panel,
-          { opacity: 0, y: 60 },
-          {
-            opacity: 1,
-            y: 0,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: panel,
-              start: "top 80%",
-              end: "top 30%",
-              scrub: true,
-            },
-          }
-        );
-        gsap.to(panel, {
+        gsap.from(panel, {
           opacity: 0,
-          y: -30,
-          ease: "power2.in",
+          y: 60,
+          duration: 0.7,
+          ease: "power2.out",
           scrollTrigger: {
             trigger: panel,
-            start: "bottom 60%",
-            end: "bottom top",
-            scrub: true,
+            start: "top 82%",
+            toggleActions: "play none none reverse",
           },
         });
 
-        // Stagger the tech tags in.
         gsap.from(tags, {
           opacity: 0,
           y: 12,
           stagger: 0.05,
-          scrollTrigger: { trigger: panel, start: "top 70%" },
+          scrollTrigger: { trigger: panel, start: "top 72%" },
         });
       });
     }, root);
@@ -89,7 +66,7 @@ export default function Projects() {
         <div
           key={project.slug}
           data-project={project.slug}
-          className="min-h-screen flex items-center"
+          className="py-16 sm:py-24"
         >
           <div className="max-w-6xl mx-auto w-full px-6 sm:px-10 grid md:grid-cols-5 gap-10 items-center">
             {/* Left column — 60% */}
@@ -97,7 +74,7 @@ export default function Projects() {
               <h3
                 style={{
                   color: "var(--text-primary)",
-                  fontSize: "clamp(2.25rem, 5vw, 3.5rem)",
+                  fontSize: "clamp(2.5rem, 5vw, 4rem)",
                   lineHeight: 1.05,
                 }}
               >
@@ -160,22 +137,35 @@ export default function Projects() {
               </div>
             </div>
 
-            {/* Right column — 40% screenshot placeholder */}
+            {/* Right column — 40% project preview */}
             <div className="md:col-span-2">
               <div
-                className="w-full rounded-2xl flex items-center justify-center"
+                className="relative w-full overflow-hidden rounded-2xl"
                 style={{
                   aspectRatio: "4 / 3",
                   backgroundColor: "var(--bg-secondary)",
                   border: "1px solid var(--border)",
                 }}
               >
-                <span
-                  className="font-mono text-xs uppercase tracking-widest"
-                  style={{ color: "var(--text-muted)" }}
-                >
-                  Screenshot
-                </span>
+                {project.image ? (
+                  <Image
+                    src={project.image}
+                    alt={`${project.name} preview`}
+                    fill
+                    unoptimized
+                    sizes="(max-width: 768px) 100vw, 40vw"
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span
+                      className="font-mono text-xs uppercase tracking-widest"
+                      style={{ color: "var(--text-muted)" }}
+                    >
+                      Screenshot
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           </div>

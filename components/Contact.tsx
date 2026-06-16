@@ -79,7 +79,7 @@ export default function Contact() {
           className="mb-16"
           style={{
             color: "var(--text-primary)",
-            fontSize: "clamp(2.5rem, 6vw, 3.5rem)",
+            fontSize: "clamp(2.5rem, 6vw, 4rem)",
           }}
         >
           Let&apos;s build something.

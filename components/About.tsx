@@ -92,7 +92,7 @@ export default function About() {
               B.Sc. Information Systems
             </p>
             <p className="mt-1 text-sm" style={{ color: "var(--text-muted)" }}>
-              Yezreel Valley College, Israel · 3rd Year
+              Yezreel Valley College, Israel · Graduated
             </p>
           </div>
           <div data-reveal-line>

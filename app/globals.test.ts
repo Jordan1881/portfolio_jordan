@@ -21,8 +21,16 @@ describe("design tokens", () => {
     expect(css).toContain(token);
   });
 
-  it("uses the dark primary background", () => {
-    expect(css).toMatch(/--bg-primary:\s*#121218/i);
+  it("uses the light snow-white primary background", () => {
+    expect(css).toMatch(/--bg-primary:\s*#F6F7F8/i);
+  });
+
+  it("uses the ink blue-black for primary text/headers", () => {
+    expect(css).toMatch(/--text-primary:\s*#14141A/i);
+  });
+
+  it("uses dark slate for body text", () => {
+    expect(css).toMatch(/--text-secondary:\s*#3A3A42/i);
   });
 
   it("keeps the indigo accent", () => {
