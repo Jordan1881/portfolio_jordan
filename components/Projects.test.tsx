@@ -33,6 +33,19 @@ describe("Projects", () => {
     }
   });
 
+  it("renders each project's preview image", () => {
+    const { container } = render(<Projects />);
+    for (const p of projects) {
+      const panel = container.querySelector(
+        `[data-project="${p.slug}"]`
+      ) as HTMLElement;
+      const img = within(panel).getByRole("img", {
+        name: new RegExp(p.name, "i"),
+      });
+      expect(img).toHaveAttribute("src", p.image);
+    }
+  });
+
   it("links each project to its case study", () => {
     const { container } = render(<Projects />);
     for (const p of projects) {
