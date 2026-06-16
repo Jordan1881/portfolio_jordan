@@ -114,9 +114,9 @@ export default function Scene3D() {
     // Particles as instanced spheres (cheap, satisfies "sphere geometry").
     const particleGeometry = new THREE.SphereGeometry(0.035, 8, 8);
     const particleMaterial = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
+      color: ACCENT, // indigo — visible on the light background
       transparent: true,
-      opacity: 0.45,
+      opacity: 0.5,
     });
     const particles = new THREE.InstancedMesh(
       particleGeometry,
@@ -135,9 +135,9 @@ export default function Scene3D() {
       new THREE.BufferAttribute(linePositions, 3)
     );
     const lineMaterial = new THREE.LineBasicMaterial({
-      color: 0xffffff,
+      color: ACCENT,
       transparent: true,
-      opacity: 0.08,
+      opacity: 0.12,
     });
     const lines = new THREE.LineSegments(lineGeometry, lineMaterial);
     scene.add(lines);
@@ -146,12 +146,13 @@ export default function Scene3D() {
     const geometryGroup = new THREE.Group();
     scene.add(geometryGroup);
 
+    // Geometries enlarged ~30% from the original sizes.
     const shapeFactories = [
-      () => new THREE.IcosahedronGeometry(1.6, 0),
-      () => new THREE.OctahedronGeometry(1.3, 0),
-      () => new THREE.TorusKnotGeometry(1, 0.32, 80, 12),
-      () => new THREE.IcosahedronGeometry(1.1, 0),
+      () => new THREE.IcosahedronGeometry(2.1, 0),
       () => new THREE.OctahedronGeometry(1.7, 0),
+      () => new THREE.TorusKnotGeometry(1.3, 0.42, 80, 12),
+      () => new THREE.IcosahedronGeometry(1.45, 0),
+      () => new THREE.OctahedronGeometry(2.2, 0),
     ];
 
     const geometries: THREE.BufferGeometry[] = [];
