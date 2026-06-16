@@ -153,6 +153,7 @@ export const caseStudies: Record<string, CaseStudy> = {
     stack: ["AWS", "Bedrock", "MCP", "Next.js", "TypeScript", "DynamoDB"],
     github: "https://github.com/Jordan1881/Finlens",
     live: null,
+    screenshot: true,
     problem: {
       headline: "Manual finance tracking is tedious; generic AI advice is shallow",
       body: "People don't know where their money goes, and pasting a statement into a chatbot gives vague, unreliable answers. Finlens is a proper tool-based system: upload a monthly bank statement as PDF or CSV (Hebrew or English) and an async pipeline produces structured summaries and narrative spending insights — reachable from a web dashboard, a REST API, or directly from AI tools over a remote MCP server.",
